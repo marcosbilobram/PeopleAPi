@@ -9,15 +9,25 @@ import java.util.List;
 
 public class PersonDTO {
 
+    private Long id;
     private String name; // Nome
     private Date birthDay; // Data de nascimento
 
     private List<Adress> adresses = new ArrayList<>(); // Endereços
 
     public PersonDTO(Person person){
+        id = person.getId();
         name = person.getName();
         birthDay = person.getBirthDay();
         adresses = person.getAdresses();
+    }
+
+    public Long getId() {
+        return id;
+    }
+
+    public void setId(Long id) {
+        this.id = id;
     }
 
     public String getName() {

@@ -5,6 +5,7 @@ import com.attornatus.project.entities.Person;
 
 public class AdressDTO {
 
+    private Long id;
     private String publicPlace; //logradouro
     private String zipCode; //CEP
     private Integer number; //número
@@ -13,6 +14,7 @@ public class AdressDTO {
     private Person person; //classe pessoa
 
     public AdressDTO(Adress adress){
+        id = adress.getId();
         publicPlace = adress.getPublicPlace();
         zipCode = adress.getZipCode();
         number = adress.getNumber();

@@ -1,22 +1,48 @@
 package com.attornatus.project.entities;
 
+import jakarta.persistence.*;
+
 import java.io.Serializable;
 
-public class Adress implements Serializable {
 //Classe de Endereço
+@Entity
+@Table(name = "tb_adress")
+public class Adress implements Serializable {
+
+    @Id
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
+    private Long id;
     private String publicPlace; //logradouro
     private String zipCode; //CEP
     private Integer number; //número
     private String city; //cidade
 
+    @ManyToOne(
+            cascade = CascadeType.ALL
+    )
+    @JoinColumn(
+            name = "person_id",
+            referencedColumnName = "id"
+    )
     private Person person; //classe pessoa
 
-    public Adress(String publicPlace, String zipCode, Integer number, String city, Person person) {
+    public Adress(){}
+
+    public Adress(Long id, String publicPlace, String zipCode, Integer number, String city, Person person) {
+        this.id = id;
         this.publicPlace = publicPlace;
         this.zipCode = zipCode;
         this.number = number;
         this.city = city;
         this.person = person;
+    }
+
+    public Long getId() {
+        return id;
+    }
+
+    public void setId(Long id) {
+        this.id = id;
     }
 
     public String getPublicPlace() {
