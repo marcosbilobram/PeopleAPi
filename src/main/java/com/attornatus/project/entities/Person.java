@@ -21,15 +21,15 @@ public class Person implements Serializable {
             name = "person_id",
             referencedColumnName = "id"
     )
-    private List<Adress> adresses = new ArrayList<>(); //Endereços
+    private List<Address> addresses = new ArrayList<>(); //Endereços
 
     public Person(){}
 
-    public Person(Long id, String name, Date birthDay, List<Adress> adresses) {
+    public Person(Long id, String name, Date birthDay, List<Address> addresses) {
         this.id = id;
         this.name = name;
         this.birthDay = birthDay;
-        this.adresses = adresses;
+        this.addresses = addresses;
     }
 
     public void setId(Long id) {
@@ -57,12 +57,12 @@ public class Person implements Serializable {
         this.birthDay = birthDay;
     }
 
-    public List<Adress> getAdresses() {
-        return adresses;
+    public List<Address> getAddresses() {
+        return addresses;
     }
 
-    public void setAdresses(List<Adress> adresses) {
-        this.adresses = adresses;
+    public void setAddresses(List<Address> addresses) {
+        this.addresses = addresses;
     }
 
 }

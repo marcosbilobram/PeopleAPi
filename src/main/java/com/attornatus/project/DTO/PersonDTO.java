@@ -1,6 +1,6 @@
 package com.attornatus.project.DTO;
 
-import com.attornatus.project.entities.Adress;
+import com.attornatus.project.entities.Address;
 import com.attornatus.project.entities.Person;
 
 import java.util.ArrayList;
@@ -13,13 +13,13 @@ public class PersonDTO {
     private String name; // Nome
     private Date birthDay; // Data de nascimento
 
-    private List<Adress> adresses = new ArrayList<>(); // Endereços
+    private List<Address> addresses = new ArrayList<>(); // Endereços
 
     public PersonDTO(Person person){
         id = person.getId();
         name = person.getName();
         birthDay = person.getBirthDay();
-        adresses = person.getAdresses();
+        addresses = person.getAddresses();
     }
 
     public Long getId() {
@@ -46,11 +46,11 @@ public class PersonDTO {
         this.birthDay = birthDay;
     }
 
-    public List<Adress> getAdresses() {
-        return adresses;
+    public List<Address> getAddresses() {
+        return addresses;
     }
 
-    public void setAdresses(List<Adress> adresses) {
-        this.adresses = adresses;
+    public void setAddresses(List<Address> addresses) {
+        this.addresses = addresses;
     }
 }

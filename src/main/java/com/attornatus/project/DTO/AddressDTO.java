@@ -1,24 +1,34 @@
 package com.attornatus.project.DTO;
 
-import com.attornatus.project.entities.Adress;
+import com.attornatus.project.entities.Address;
 import com.attornatus.project.entities.Person;
 
-public class AdressDTO {
+public class AddressDTO {
 
     private Long id;
     private String publicPlace; //logradouro
-    private String zipCode; //CEP
     private Integer number; //número
+    private String zipCode; //CEP
     private String city; //cidade
+    private Boolean isMain;
 
     private Person person; //classe pessoa
 
-    public AdressDTO(Adress adress){
-        id = adress.getId();
-        publicPlace = adress.getPublicPlace();
-        zipCode = adress.getZipCode();
-        number = adress.getNumber();
-        city = adress.getCity();
+    public AddressDTO(Address address){
+        id = address.getId();
+        publicPlace = address.getPublicPlace();
+        number = address.getNumber();
+        zipCode = address.getZipCode();
+        city = address.getCity();
+        isMain = address.getMain();
+    }
+
+    public Long getId() {
+        return id;
+    }
+
+    public void setId(Long id) {
+        this.id = id;
     }
 
     public String getPublicPlace() {
@@ -51,6 +61,14 @@ public class AdressDTO {
 
     public void setCity(String city) {
         this.city = city;
+    }
+
+    public Boolean getMain() {
+        return isMain;
+    }
+
+    public void setMain(Boolean main) {
+        isMain = main;
     }
 
     public Person getPerson() {

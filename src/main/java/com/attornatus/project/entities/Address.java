@@ -6,16 +6,17 @@ import java.io.Serializable;
 
 //Classe de Endereço
 @Entity
-@Table(name = "tb_adress")
-public class Adress implements Serializable {
+@Table(name = "tb_address")
+public class Address implements Serializable {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
     private String publicPlace; //logradouro
-    private String zipCode; //CEP
     private Integer number; //número
+    private String zipCode; //CEP
     private String city; //cidade
+    private Boolean isMain = false; //atributo que definirá se o endereço é o principal ou não
 
     @ManyToOne(
             cascade = CascadeType.ALL
@@ -26,13 +27,13 @@ public class Adress implements Serializable {
     )
     private Person person; //classe pessoa
 
-    public Adress(){}
+    public Address(){}
 
-    public Adress(Long id, String publicPlace, String zipCode, Integer number, String city, Person person) {
+    public Address(Long id, String publicPlace, Integer number, String zipCode, String city, Person person) {
         this.id = id;
         this.publicPlace = publicPlace;
-        this.zipCode = zipCode;
         this.number = number;
+        this.zipCode = zipCode;
         this.city = city;
         this.person = person;
     }
@@ -75,6 +76,14 @@ public class Adress implements Serializable {
 
     public void setCity(String city) {
         this.city = city;
+    }
+
+    public Boolean getMain() {
+        return isMain;
+    }
+
+    public void setMain(Boolean main) {
+        isMain = main;
     }
 
     public Person getPerson() {

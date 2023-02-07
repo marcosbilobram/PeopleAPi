@@ -1,6 +1,6 @@
 package com.attornatus.project.config;
 
-import com.attornatus.project.repositories.AdressRepository;
+import com.attornatus.project.repositories.AddressRepository;
 import com.attornatus.project.repositories.PersonRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Configuration;
@@ -14,7 +14,7 @@ public class TestConfig {
     private PersonRepository personRepository;
 
     @Autowired
-    private AdressRepository adressRepository;
+    private AddressRepository addressRepository;
 
 
 }
