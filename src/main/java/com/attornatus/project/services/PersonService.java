@@ -8,6 +8,7 @@ import com.attornatus.project.repositories.PersonRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
+import java.util.ArrayList;
 import java.util.List;
 
 @Service
@@ -42,7 +43,7 @@ public class PersonService {
     }
 
     public void setMainAddress(Long personId, Long addressID){
-        List<Address> listAds = addressRep.getAddressesByPersonId(personId);
+        List<Address> listAds = addressRep.getAllByPersonId(personId);
         for(Address ads : listAds){
             ads.setMain(false);
         }
@@ -50,6 +51,13 @@ public class PersonService {
         ads.setMain(true);
 
         addressRep.save(ads);
+    }
+
+    public void insertAddress(Long personId, Address address){
+        Person person = findById(personId);
+        person.getAddresses().add(address);
+        address.setPerson(person);
+        personRep.save(person);
     }
 
     public void dataUpdater(Person personOnDB, Person newPerson) {

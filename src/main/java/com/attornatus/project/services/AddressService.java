@@ -3,7 +3,6 @@ package com.attornatus.project.services;
 import com.attornatus.project.DTO.AddressDTO;
 import com.attornatus.project.entities.Address;
 import com.attornatus.project.repositories.AddressRepository;
-import com.attornatus.project.repositories.PersonRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
@@ -47,5 +46,9 @@ public class AddressService {
     public Address fromDTO(AddressDTO addressDTO){
         return new Address(addressDTO.getId(), addressDTO.getPublicPlace(), addressDTO.getNumber(),
                             addressDTO.getZipCode(), addressDTO.getCity(), addressDTO.getPerson(), addressDTO.getMain());
+    }
+
+    public List<Address> getPersonAddressessById(Long id){
+        return addressRep.getAllByPersonId(id);
     }
 }

@@ -8,6 +8,6 @@ import java.util.List;
 
 public interface AddressRepository extends JpaRepository<Address, Long> {
 
-    @Query(value = "SELECT * FROM tb_address ad WHERE ad.person_id = ?1", nativeQuery = true)
-    List<Address> getAddressesByPersonId(Long personId);
+    //@Query(value = "SELECT ad  FROM Address ad WHERE ad.person.id = ?1", nativeQuery = false)
+    List<Address> getAllByPersonId(Long personId);
 }

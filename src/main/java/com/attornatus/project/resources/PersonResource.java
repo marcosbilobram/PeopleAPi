@@ -1,6 +1,8 @@
 package com.attornatus.project.resources;
 
+import com.attornatus.project.DTO.AddressDTO;
 import com.attornatus.project.DTO.PersonDTO;
+import com.attornatus.project.entities.Address;
 import com.attornatus.project.entities.Person;
 import com.attornatus.project.services.AddressService;
 import com.attornatus.project.services.PersonService;
@@ -36,7 +38,7 @@ public class PersonResource {
         return ResponseEntity.ok().body(new PersonDTO(person));
     }
 
-    @PostMapping
+    @PostMapping(value = "/add")
     public ResponseEntity<Void> insert(@RequestBody PersonDTO personDTO){
         Person person = personService.fromDTO(personDTO);
         person = personService.insert(person);
@@ -58,11 +60,23 @@ public class PersonResource {
         return ResponseEntity.noContent().build();
     }
 
-
-
     @PutMapping(value = "/{personId}/ads/{addressId}/edit")
     public ResponseEntity<Void> setMainAddress(@PathVariable Long personId, @PathVariable Long addressId){
         personService.setMainAddress(personId, addressId);
         return ResponseEntity.noContent().build();
+    }
+
+    @PostMapping(value = "/{personId}/ads/add")
+    public ResponseEntity<Void> insertAddress(@PathVariable Long personId, @RequestBody AddressDTO addressDTO){
+        Address ads = addressService.fromDTO(addressDTO);
+        personService.insertAddress(personId, ads);
+        return ResponseEntity.ok().build();
+    }
+
+    @GetMapping(value = "/{personId}/ads")
+    public ResponseEntity<List<AddressDTO>> findPersonAdresses(@PathVariable Long personId){
+        List<Address> ads = addressService.getPersonAddressessById(personId);
+        List<AddressDTO> list = ads.stream().map(ad -> new AddressDTO(ad)).toList();
+        return ResponseEntity.ok().body(list);
     }
 }

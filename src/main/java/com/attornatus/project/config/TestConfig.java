@@ -7,14 +7,12 @@ import com.attornatus.project.repositories.PersonRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.CommandLineRunner;
 import org.springframework.context.annotation.Configuration;
-import org.springframework.context.annotation.Profile;
 
 import java.text.SimpleDateFormat;
 import java.util.Arrays;
 import java.util.List;
 
 @Configuration
-@Profile("Test")
 public class TestConfig implements CommandLineRunner {
 
     @Autowired
@@ -39,8 +37,6 @@ public class TestConfig implements CommandLineRunner {
         Person person3 = new Person(3L, "Mark Zuckerberg", sdf.parse("28/08/1995"), null );
 
         Address address3 = new Address(2L, "Rua dos patos", 498, "0006-255","Osasco",null, false);
-
-
 
         person1.setAddresses(List.of(address1));
         address1.setPerson(person1);
