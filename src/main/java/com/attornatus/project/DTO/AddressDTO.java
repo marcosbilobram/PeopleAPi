@@ -14,6 +14,8 @@ public class AddressDTO {
 
     private Person person; //classe pessoa
 
+    public AddressDTO(){}
+
     public AddressDTO(Address address){
         id = address.getId();
         publicPlace = address.getPublicPlace();

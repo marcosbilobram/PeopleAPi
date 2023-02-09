@@ -2,6 +2,7 @@ package com.attornatus.project.DTO;
 
 import com.attornatus.project.entities.Address;
 import com.attornatus.project.entities.Person;
+import com.fasterxml.jackson.annotation.JsonFormat;
 
 import java.util.ArrayList;
 import java.util.Date;
@@ -11,9 +12,12 @@ public class PersonDTO {
 
     private Long id;
     private String name; // Nome
+    @JsonFormat(pattern="dd/MM/yyyy")
     private Date birthDay; // Data de nascimento
 
     private List<Address> addresses = new ArrayList<>(); // Endereços
+
+    public PersonDTO(){}
 
     public PersonDTO(Person person){
         id = person.getId();

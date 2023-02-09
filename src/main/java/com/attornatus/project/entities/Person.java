@@ -1,5 +1,6 @@
 package com.attornatus.project.entities;
 
+import com.fasterxml.jackson.annotation.JsonFormat;
 import jakarta.persistence.*;
 
 import java.io.Serializable;
@@ -14,6 +15,7 @@ public class Person implements Serializable {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
     private String name; //Nome
+    @JsonFormat(pattern="dd/MM/yyyy")
     private Date birthDay; //Data de nascimento
 
     @OneToMany(cascade = CascadeType.ALL)

@@ -1,5 +1,6 @@
 package com.attornatus.project.entities;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import jakarta.persistence.*;
 
 import java.io.Serializable;
@@ -25,17 +26,19 @@ public class Address implements Serializable {
             name = "person_id",
             referencedColumnName = "id"
     )
+    @JsonIgnore
     private Person person; //classe pessoa
 
     public Address(){}
 
-    public Address(Long id, String publicPlace, Integer number, String zipCode, String city, Person person) {
+    public Address(Long id, String publicPlace, Integer number, String zipCode, String city, Person person, Boolean isMain) {
         this.id = id;
         this.publicPlace = publicPlace;
         this.number = number;
         this.zipCode = zipCode;
         this.city = city;
         this.person = person;
+        this.isMain = isMain;
     }
 
     public Long getId() {

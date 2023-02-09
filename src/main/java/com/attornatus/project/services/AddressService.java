@@ -15,20 +15,37 @@ public class AddressService {
     @Autowired
     AddressRepository addressRep;
 
-    //set main address
-    public void setMainAddress(Long personId, Long addressID){
-        List<Address> listAds = addressRep.getAddressesByPersonId(personId);
-        for(Address ads : listAds){
-            ads.setMain(false);
-        }
-        Address ads = addressRep.findById(addressID).get();
-        ads.setMain(true);
-    } //ID de pessoa
+    public List<Address> findAll(){
+        return addressRep.findAll();
+    }
 
+    public Address findById(Long id){
+        return addressRep.findById(id).get();
+    }
 
+    public Address insert(Address address){
+        return addressRep.save(address);
+    }
+
+    public Address update(Address address){
+        Address ads = findById(address.getId());
+        dataUpdater(ads, address);
+        return addressRep.save(ads);
+    }
+
+    public void delete(Long id){
+        addressRep.deleteById(id);
+    }
+
+    public void dataUpdater(Address addressOnDB, Address newAddress){
+        addressOnDB.setPublicPlace(newAddress.getPublicPlace());
+        addressOnDB.setNumber(newAddress.getNumber());
+        addressOnDB.setZipCode(newAddress.getZipCode());
+        addressOnDB.setCity(newAddress.getCity());
+    }
 
     public Address fromDTO(AddressDTO addressDTO){
         return new Address(addressDTO.getId(), addressDTO.getPublicPlace(), addressDTO.getNumber(),
-                            addressDTO.getZipCode(), addressDTO.getCity(), addressDTO.getPerson());
+                            addressDTO.getZipCode(), addressDTO.getCity(), addressDTO.getPerson(), addressDTO.getMain());
     }
 }
