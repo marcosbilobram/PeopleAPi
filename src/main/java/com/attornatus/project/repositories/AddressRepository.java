@@ -10,4 +10,7 @@ public interface AddressRepository extends JpaRepository<Address, Long> {
 
     //@Query(value = "SELECT ad  FROM Address ad WHERE ad.person.id = ?1", nativeQuery = false)
     List<Address> getAllByPersonId(Long personId);
+
+    @Query(value = "SELECT ad FROM Address ad where ad.person.id = ?1 and ad.isMain = TRUE")
+    Address getAddressByIsMainEqualsTrue(Long id);
 }

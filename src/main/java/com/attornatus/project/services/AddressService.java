@@ -36,6 +36,14 @@ public class AddressService {
         addressRep.deleteById(id);
     }
 
+    public List<Address> getPersonAddressessById(Long id){
+        return addressRep.getAllByPersonId(id);
+    }
+
+    public Address getMainAddress(Long id){
+        return addressRep.getAddressByIsMainEqualsTrue(id);
+    }
+
     public void dataUpdater(Address addressOnDB, Address newAddress){
         addressOnDB.setPublicPlace(newAddress.getPublicPlace());
         addressOnDB.setNumber(newAddress.getNumber());
@@ -46,9 +54,5 @@ public class AddressService {
     public Address fromDTO(AddressDTO addressDTO){
         return new Address(addressDTO.getId(), addressDTO.getPublicPlace(), addressDTO.getNumber(),
                             addressDTO.getZipCode(), addressDTO.getCity(), addressDTO.getPerson(), addressDTO.getMain());
-    }
-
-    public List<Address> getPersonAddressessById(Long id){
-        return addressRep.getAllByPersonId(id);
     }
 }

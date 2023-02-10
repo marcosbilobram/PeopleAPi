@@ -67,10 +67,11 @@ public class PersonResource {
     }
 
     @PostMapping(value = "/{personId}/ads/add")
-    public ResponseEntity<Void> insertAddress(@PathVariable Long personId, @RequestBody AddressDTO addressDTO){
+    public ResponseEntity<Void> insertPersonAddress(@PathVariable Long personId, @RequestBody AddressDTO addressDTO){
         Address ads = addressService.fromDTO(addressDTO);
         personService.insertAddress(personId, ads);
-        return ResponseEntity.ok().build();
+        URI uri = ServletUriComponentsBuilder.fromCurrentRequest().path("/{id}").buildAndExpand(ads.getId()).toUri();
+        return ResponseEntity.created(uri).build();
     }
 
     @GetMapping(value = "/{personId}/ads")
@@ -78,5 +79,11 @@ public class PersonResource {
         List<Address> ads = addressService.getPersonAddressessById(personId);
         List<AddressDTO> list = ads.stream().map(ad -> new AddressDTO(ad)).toList();
         return ResponseEntity.ok().body(list);
+    }
+
+    @GetMapping(value = "/{personId}/ads/main")
+    public ResponseEntity<AddressDTO> findMainAddress(@PathVariable Long personId){
+        Address address = addressService.getMainAddress(personId);
+        return ResponseEntity.ok().body(new AddressDTO(address));
     }
 }
