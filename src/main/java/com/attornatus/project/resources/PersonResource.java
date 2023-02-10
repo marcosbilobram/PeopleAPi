@@ -60,6 +60,12 @@ public class PersonResource {
         return ResponseEntity.noContent().build();
     }
 
+    @GetMapping(value = "/filter")
+    public ResponseEntity<List<PersonDTO>> findPersonByName(@RequestParam("name") String name){
+        List<PersonDTO> list = personService.findByName(name).stream().map(p -> new PersonDTO(p)).collect(Collectors.toList());
+        return ResponseEntity.ok().body(list);
+    }
+
     @PutMapping(value = "/{personId}/ads/{addressId}/edit")
     public ResponseEntity<Void> setMainAddress(@PathVariable Long personId, @PathVariable Long addressId){
         personService.setMainAddress(personId, addressId);

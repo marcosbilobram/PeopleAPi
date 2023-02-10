@@ -19,7 +19,9 @@ public class AddressService {
     }
 
     public Address findById(Long id){
+
         return addressRep.findById(id).get();
+
     }
 
     public Address insert(Address address){

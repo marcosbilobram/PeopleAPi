@@ -59,6 +59,10 @@ public class PersonService {
         personRep.save(person);
     }
 
+    public List<Person> findByName(String name){
+        return personRep.findByNameContainingIgnoreCase(name);
+    }
+
     public void dataUpdater(Person personOnDB, Person newPerson) {
         personOnDB.setName(newPerson.getName());
         personOnDB.setBirthDay(newPerson.getBirthDay());

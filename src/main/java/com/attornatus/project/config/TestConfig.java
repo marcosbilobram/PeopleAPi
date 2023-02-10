@@ -52,8 +52,7 @@ public class TestConfig implements CommandLineRunner {
 
     }
 
-    //TODO : find person addresses
     //TODO : testes crud
-
+    //TODO : Exceptions
 
 }
