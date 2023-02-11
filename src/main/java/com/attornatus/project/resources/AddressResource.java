@@ -3,8 +3,10 @@ package com.attornatus.project.resources;
 
 import com.attornatus.project.DTO.AddressDTO;
 import com.attornatus.project.entities.Address;
+import com.attornatus.project.exceptions.InvalidPropertyException;
 import com.attornatus.project.services.AddressService;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.dao.DataIntegrityViolationException;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.servlet.support.ServletUriComponentsBuilder;
@@ -35,18 +37,52 @@ public class AddressResource {
 
     @PostMapping
     public ResponseEntity<Void> insert(@RequestBody AddressDTO addressDTO){
-        Address ads = addressService.fromDTO(addressDTO);
-        ads = addressService.insert(ads);
-        URI uri = ServletUriComponentsBuilder.fromCurrentRequestUri().path("/{id}").buildAndExpand(ads.getId()).toUri();
-        return ResponseEntity.created(uri).build();
+        try{
+            Address ads = addressService.fromDTO(addressDTO);
+            ads = addressService.insert(ads);
+            URI uri = ServletUriComponentsBuilder.fromCurrentRequestUri().path("/{id}").buildAndExpand(ads.getId()).toUri();
+            return ResponseEntity.created(uri).build();
+
+        }catch (DataIntegrityViolationException e){
+            if(addressDTO.getPublicPlace() == null ){
+                throw new InvalidPropertyException("Invalid property given on request","Address","PublicPlace");
+            }
+            if(addressDTO.getNumber() == null){
+                throw new InvalidPropertyException("Invalid property given on request","Address","Number");
+            }
+            if(addressDTO.getZipCode() == null || addressDTO.getZipCode().length() > 8){
+                throw new InvalidPropertyException("Invalid property given on request","Address","ZipCode");
+            }
+            if(addressDTO.getCity() == null){
+                throw new InvalidPropertyException("Invalid property given on request","Address","City");
+            }
+        }
+
+        return null;
     }
 
-    @PutMapping(value = "/{id}")
-    public ResponseEntity<Void> update(@RequestBody AddressDTO userDTO, @PathVariable Long id){
-        Address ads = addressService.fromDTO(userDTO);
-        ads.setId(id);
-        ads = addressService.update(ads);
-        return ResponseEntity.noContent().build();
+    @PutMapping(value = "/{id}/edit")
+    public ResponseEntity<Void> update(@RequestBody AddressDTO addressDTO, @PathVariable Long id){
+        try {
+            Address ads = addressService.fromDTO(addressDTO);
+            ads.setId(id);
+            ads = addressService.update(ads);
+            return ResponseEntity.noContent().build();
+        }catch (DataIntegrityViolationException e){
+            if(addressDTO.getPublicPlace() == null || addressDTO.getPublicPlace().length() > 45){
+                throw new InvalidPropertyException("Invalid property given on request","Address","PublicPlace");
+            }
+            if(addressDTO.getNumber() == null){
+                throw new InvalidPropertyException("Invalid property given on request","Address","Number");
+            }
+            if(addressDTO.getZipCode() == null || addressDTO.getZipCode().length() > 8){
+                throw new InvalidPropertyException("Invalid property given on request","Address","ZipCode");
+            }
+            if(addressDTO.getCity() == null){
+                throw new InvalidPropertyException("Invalid property given on request","Address","City");
+            }
+        }
+        return null;
     }
 
     @DeleteMapping(value = "/{id}")

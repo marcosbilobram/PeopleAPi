@@ -1,5 +1,6 @@
 package com.attornatus.project.entities;
 
+import com.fasterxml.jackson.annotation.JsonFormat;
 import com.fasterxml.jackson.annotation.JsonIgnore;
 import jakarta.persistence.*;
 
@@ -13,15 +14,23 @@ public class Address implements Serializable {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
+
+    @Column(length = 45, nullable = false)
     private String publicPlace; //logradouro
+
+    @Column(nullable = false)
     private Integer number; //número
+
+    @Column(length = 9, nullable = false)
+    @JsonFormat(pattern="nnnnn-nnn")
     private String zipCode; //CEP
+
+    @Column(length = 20, nullable = false)
     private String city; //cidade
+
     private Boolean isMain = false; //atributo que definirá se o endereço é o principal ou não
 
-    @ManyToOne(
-            cascade = CascadeType.ALL
-    )
+    @ManyToOne
     @JoinColumn(
             name = "person_id",
             referencedColumnName = "id"

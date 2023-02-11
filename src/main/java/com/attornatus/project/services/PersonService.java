@@ -3,12 +3,15 @@ package com.attornatus.project.services;
 import com.attornatus.project.DTO.PersonDTO;
 import com.attornatus.project.entities.Address;
 import com.attornatus.project.entities.Person;
+import com.attornatus.project.exceptions.InvalidPropertyException;
+import com.attornatus.project.exceptions.ObjectNotFoundException;
 import com.attornatus.project.repositories.AddressRepository;
 import com.attornatus.project.repositories.PersonRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
+import java.util.Optional;
 
 @Service
 public class PersonService {
@@ -19,12 +22,23 @@ public class PersonService {
     @Autowired
     AddressRepository addressRep;
 
+    @Autowired
+    AddressService adsSer;
+
     public List<Person> findAll(){
-        return personRep.findAll();
+        List<Person> list = personRep.findAll();
+        if(list.isEmpty()){
+            throw new ObjectNotFoundException("There is no such data available");
+        }
+        return list;
     }
 
-    public Person findById(Long id){
-        return personRep.findById(id).get();
+    public Person findById(Long id) throws ObjectNotFoundException {
+        Optional<Person> person = personRep.findById(id);
+        if(!person.isPresent()) {
+            throw new ObjectNotFoundException("Person with id: " + id + " is not available");
+        }
+        return person.get();
     }
 
     public Person insert(Person person){
@@ -38,18 +52,31 @@ public class PersonService {
     }
 
     public void delete(Long id){
+        findById(id);
         personRep.deleteById(id);
     }
 
     public void setMainAddress(Long personId, Long addressID){
-        List<Address> listAds = addressRep.getAllByPersonId(personId);
+        findById(personId);
+        adsSer.findById(addressID);
+        List<Address> listAds = adsSer.getPersonAddressessById(personId);
+
+        Address address = null;
         for(Address ads : listAds){
             ads.setMain(false);
+            if (ads.getId() == addressID){
+                address = ads;
+            }
         }
-        Address ads = addressRep.findById(addressID).get();
-        ads.setMain(true);
 
-        addressRep.save(ads);
+        if(address == null){
+            throw new ObjectNotFoundException("Address with id: " + addressID + " is not available");
+        }
+
+        address.setMain(true);
+
+        addressRep.save(address);
+
     }
 
     public void insertAddress(Long personId, Address address){
@@ -60,7 +87,12 @@ public class PersonService {
     }
 
     public List<Person> findByName(String name){
-        return personRep.findByNameContainingIgnoreCase(name);
+        List<Person> list = personRep.findByNameContainingIgnoreCase(name);
+        if(list.isEmpty()){
+            throw new ObjectNotFoundException("There is no such person with name: " + name);
+        } else{
+            return list;
+        }
     }
 
     public void dataUpdater(Person personOnDB, Person newPerson) {

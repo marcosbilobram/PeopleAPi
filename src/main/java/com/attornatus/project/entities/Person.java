@@ -14,7 +14,11 @@ public class Person implements Serializable {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
+
+    @Column(length = 60, nullable = false)
     private String name; //Nome
+
+    @Column(nullable = false)
     @JsonFormat(pattern="dd/MM/yyyy")
     private Date birthDay; //Data de nascimento
 
