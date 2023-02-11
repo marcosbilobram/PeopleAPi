@@ -1,7 +1,7 @@
 package com.attornatus.project.resources;
 
-import com.attornatus.project.DTO.AddressDTO;
-import com.attornatus.project.DTO.PersonDTO;
+import com.attornatus.project.dto.AddressDTO;
+import com.attornatus.project.dto.PersonDTO;
 import com.attornatus.project.entities.Address;
 import com.attornatus.project.entities.Person;
 import com.attornatus.project.exceptions.InvalidPropertyException;

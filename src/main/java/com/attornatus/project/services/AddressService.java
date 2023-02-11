@@ -1,6 +1,6 @@
 package com.attornatus.project.services;
 
-import com.attornatus.project.DTO.AddressDTO;
+import com.attornatus.project.dto.AddressDTO;
 import com.attornatus.project.entities.Address;
 import com.attornatus.project.entities.Person;
 import com.attornatus.project.exceptions.ObjectNotFoundException;

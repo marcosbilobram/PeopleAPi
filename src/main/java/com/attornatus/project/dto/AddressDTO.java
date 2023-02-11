@@ -1,4 +1,4 @@
-package com.attornatus.project.DTO;
+package com.attornatus.project.dto;
 
 import com.attornatus.project.entities.Address;
 import com.attornatus.project.entities.Person;
