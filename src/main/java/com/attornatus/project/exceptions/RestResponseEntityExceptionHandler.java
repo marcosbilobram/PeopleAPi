@@ -14,16 +14,16 @@ import org.springframework.web.servlet.mvc.method.annotation.ResponseEntityExcep
 public class RestResponseEntityExceptionHandler extends ResponseEntityExceptionHandler {
 
     @ExceptionHandler(ObjectNotFoundException.class)
-    public ResponseEntity<ErrorMessage> personNotFoundException(ObjectNotFoundException exception, WebRequest request){
+    public ResponseEntity<ErrorMessage> personNotFoundException(ObjectNotFoundException exception, WebRequest request) {
 
-        ErrorMessage message =  new ErrorMessage(HttpStatus.NOT_FOUND, exception.getMessage());
+        ErrorMessage message = new ErrorMessage(HttpStatus.NOT_FOUND, exception.getMessage());
         return ResponseEntity.status(HttpStatus.NOT_FOUND).body(message);
     }
 
     @ExceptionHandler(InvalidPropertyException.class)
-    public ResponseEntity<ErrorMessage> invalidPropertyException(InvalidPropertyException exception, WebRequest request){
+    public ResponseEntity<ErrorMessage> invalidPropertyException(InvalidPropertyException exception, WebRequest request) {
 
-        ErrorMessage message =  new ErrorMessage(HttpStatus.BAD_REQUEST, exception.getMessage());
+        ErrorMessage message = new ErrorMessage(HttpStatus.BAD_REQUEST, exception.getMessage());
         return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(message);
     }
 

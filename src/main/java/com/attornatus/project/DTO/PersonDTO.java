@@ -12,14 +12,15 @@ public class PersonDTO {
 
     private Long id;
     private String name; // Nome
-    @JsonFormat(pattern="dd/MM/yyyy")
+    @JsonFormat(pattern = "dd/MM/yyyy")
     private Date birthDay; // Data de nascimento
 
     private List<Address> addresses = new ArrayList<>(); // Endereços
 
-    public PersonDTO(){}
+    public PersonDTO() {
+    }
 
-    public PersonDTO(Person person){
+    public PersonDTO(Person person) {
         id = person.getId();
         name = person.getName();
         birthDay = person.getBirthDay();

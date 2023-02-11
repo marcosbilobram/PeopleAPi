@@ -3,6 +3,7 @@ package com.attornatus.project.exceptions;
 import java.util.NoSuchElementException;
 
 public class ObjectNotFoundException extends NoSuchElementException {
+
     public ObjectNotFoundException() {
         super();
     }
@@ -20,4 +21,5 @@ public class ObjectNotFoundException extends NoSuchElementException {
     public String getMessage() {
         return super.getMessage();
     }
+
 }

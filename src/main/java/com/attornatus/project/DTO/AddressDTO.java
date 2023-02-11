@@ -14,9 +14,10 @@ public class AddressDTO {
 
     private Person person; //classe pessoa
 
-    public AddressDTO(){}
+    public AddressDTO() {
+    }
 
-    public AddressDTO(Address address){
+    public AddressDTO(Address address) {
         id = address.getId();
         publicPlace = address.getPublicPlace();
         number = address.getNumber();

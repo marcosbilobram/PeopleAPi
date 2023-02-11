@@ -13,4 +13,5 @@ public class InvalidPropertyException extends PropertyValueException {
     public InvalidPropertyException(String message, String entityName, String propertyName) {
         super(message, entityName, propertyName);
     }
+
 }

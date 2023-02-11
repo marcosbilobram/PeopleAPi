@@ -4,7 +4,9 @@ import com.fasterxml.jackson.annotation.JsonFormat;
 import jakarta.persistence.*;
 
 import java.io.Serializable;
-import java.util.*;
+import java.util.ArrayList;
+import java.util.Date;
+import java.util.List;
 
 //Classe de Pessoa
 @Entity
@@ -19,7 +21,7 @@ public class Person implements Serializable {
     private String name; //Nome
 
     @Column(nullable = false)
-    @JsonFormat(pattern="dd/MM/yyyy")
+    @JsonFormat(pattern = "dd/MM/yyyy")
     private Date birthDay; //Data de nascimento
 
     @OneToMany(cascade = CascadeType.ALL)
@@ -29,7 +31,8 @@ public class Person implements Serializable {
     )
     private List<Address> addresses = new ArrayList<>(); //Endereços
 
-    public Person(){}
+    public Person() {
+    }
 
     public Person(Long id, String name, Date birthDay, List<Address> addresses) {
         this.id = id;
@@ -45,7 +48,6 @@ public class Person implements Serializable {
     public Long getId() {
         return id;
     }
-
 
     public String getName() {
         return name;

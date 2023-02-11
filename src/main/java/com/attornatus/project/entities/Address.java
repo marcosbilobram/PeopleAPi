@@ -22,7 +22,7 @@ public class Address implements Serializable {
     private Integer number; //número
 
     @Column(length = 9, nullable = false)
-    @JsonFormat(pattern="nnnnn-nnn")
+    @JsonFormat(pattern = "nnnnn-nnn")
     private String zipCode; //CEP
 
     @Column(length = 20, nullable = false)
@@ -38,7 +38,8 @@ public class Address implements Serializable {
     @JsonIgnore
     private Person person; //classe pessoa
 
-    public Address(){}
+    public Address() {
+    }
 
     public Address(Long id, String publicPlace, Integer number, String zipCode, String city, Person person, Boolean isMain) {
         this.id = id;
@@ -105,4 +106,5 @@ public class Address implements Serializable {
     public void setPerson(Person person) {
         this.person = person;
     }
+
 }

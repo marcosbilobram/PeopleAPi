@@ -26,17 +26,17 @@ public class TestConfig implements CommandLineRunner {
 
         SimpleDateFormat sdf = new SimpleDateFormat("dd/MM/yyyy");
 
-        Person person1 = new Person(1L, "Marcos", sdf.parse("14/02/2004"), null );
+        Person person1 = new Person(1L, "Marcos", sdf.parse("14/02/2004"), null);
 
-        Address address1 = new Address(3L, "Rua do avestruz", 100, "68544-225","Cidade das cidades",null, false);
+        Address address1 = new Address(3L, "Rua do avestruz", 100, "68544-225", "Cidade das cidades", null, false);
 
-        Person person2 = new Person(2L, "Jeff Bezos", sdf.parse("25/08/1981"), null );
+        Person person2 = new Person(2L, "Jeff Bezos", sdf.parse("25/08/1981"), null);
 
-        Address address2 = new Address(1L, "Rua das lagoas", 45, "0006-554","Osasco",null, false);
+        Address address2 = new Address(1L, "Rua das lagoas", 45, "0006-554", "Osasco", null, false);
 
-        Person person3 = new Person(3L, "Mark Zuckerberg", sdf.parse("28/08/1995"), null );
+        Person person3 = new Person(3L, "Mark Zuckerberg", sdf.parse("28/08/1995"), null);
 
-        Address address3 = new Address(2L, "Rua dos patos", 498, "0006-255","Osasco",null, false);
+        Address address3 = new Address(2L, "Rua dos patos", 498, "0006-255", "Osasco", null, false);
 
         person1.setAddresses(List.of(address1));
         address1.setPerson(person1);
@@ -51,8 +51,5 @@ public class TestConfig implements CommandLineRunner {
         addressRepository.saveAll(Arrays.asList(address1, address2, address3));
 
     }
-
-    //TODO : testes crud
-    //TODO : Exceptions
 
 }

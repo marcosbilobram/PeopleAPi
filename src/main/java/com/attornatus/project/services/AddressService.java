@@ -21,71 +21,85 @@ public class AddressService {
     @Autowired
     PersonRepository personRep;
 
-    public List<Address> findAll(){
+    public List<Address> findAll() {
         List<Address> list = addressRep.findAll();
-        if(list.isEmpty()){
+
+        if (list.isEmpty()) {
             throw new ObjectNotFoundException("There is no such data available");
         }
         return list;
     }
 
-    public Address findById(Long id){
-        Optional<Address> ads =  addressRep.findById(id);
-        if(!ads.isPresent()) {
+    public Address findById(Long id) {
+        Optional<Address> ads = addressRep.findById(id);
+
+        if (!ads.isPresent()) {
             throw new ObjectNotFoundException("Address with id: " + id + " is not available");
         }
         return ads.get();
     }
 
-    public Address insert(Address address){
+    public Address insert(Address address) {
         return addressRep.save(address);
     }
 
-    public Address update(Address address){
+    public Address update(Address address) {
         Address ads = findById(address.getId());
         dataUpdater(ads, address);
         return addressRep.save(ads);
     }
 
-    public void delete(Long id){
+    public void delete(Long id) {
         findById(id);
         addressRep.deleteById(id);
     }
 
-    public List<Address> getPersonAddressessById(Long id){
+    public List<Address> getPersonAddressesById(Long id) {
         Optional<Person> person = personRep.findById(id);
-        if(!person.isPresent()){
+
+        if (!person.isPresent()) {
             throw new ObjectNotFoundException("Person with id: " + id + " is not available");
         }
-        List<Address> ads =  addressRep.getAllByPersonId(id);
-        if(ads.isEmpty()){
+
+        List<Address> ads = addressRep.getAllByPersonId(id);
+
+        if (ads.isEmpty()) {
             throw new ObjectNotFoundException("There is no address available in person with id: " + id);
         }
         return ads;
     }
 
-    public Address getMainAddress(Long id){
+    public Address getMainAddress(Long id) {
         Optional<Person> person = personRep.findById(id);
-        if(!person.isPresent()){
+
+        if (!person.isPresent()) {
             throw new ObjectNotFoundException("Person with id: " + id + " is not available");
         }
 
         Address ads = addressRep.getAddressByIsMainEqualsTrue(id);
-        if(ads == null){
+
+        if (ads == null) {
             throw new ObjectNotFoundException("There is no main address available in person with id: " + id);
         }
         return ads;
     }
 
-    public void dataUpdater(Address addressOnDB, Address newAddress){
+    public void dataUpdater(Address addressOnDB, Address newAddress) {
         addressOnDB.setPublicPlace(newAddress.getPublicPlace());
         addressOnDB.setNumber(newAddress.getNumber());
         addressOnDB.setZipCode(newAddress.getZipCode());
         addressOnDB.setCity(newAddress.getCity());
     }
 
-    public Address fromDTO(AddressDTO addressDTO){
-        return new Address(addressDTO.getId(), addressDTO.getPublicPlace(), addressDTO.getNumber(),
-                            addressDTO.getZipCode(), addressDTO.getCity(), addressDTO.getPerson(), addressDTO.getMain());
+    public Address fromDTO(AddressDTO addressDTO) {
+        return new Address(
+                addressDTO.getId(),
+                addressDTO.getPublicPlace(),
+                addressDTO.getNumber(),
+                addressDTO.getZipCode(),
+                addressDTO.getCity(),
+                addressDTO.getPerson(),
+                addressDTO.getMain()
+        );
     }
 }
