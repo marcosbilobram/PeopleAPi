@@ -9,8 +9,8 @@ import lombok.NoArgsConstructor;
 
 @AllArgsConstructor
 @NoArgsConstructor
-@Builder
 @Data
+@Builder
 public class AddressDTO {
 
     private Long id;
@@ -19,5 +19,15 @@ public class AddressDTO {
     private String zipCode; //CEP
     private String city; //cidade
     private Boolean isMain;
+
     private Person person; //classe pessoa
+
+    public AddressDTO(Address address) {
+        id = address.getId();
+        street = address.getStreet();
+        number = address.getNumber();
+        zipCode = address.getZipCode();
+        city = address.getCity();
+        isMain = address.getIsMain();
+    }
 }

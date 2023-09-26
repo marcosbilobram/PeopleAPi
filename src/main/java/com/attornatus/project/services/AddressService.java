@@ -85,7 +85,7 @@ public class AddressService {
     }
 
     public void dataUpdater(Address addressOnDB, Address newAddress) {
-        addressOnDB.setPublicPlace(newAddress.getPublicPlace());
+        addressOnDB.setStreet(newAddress.getStreet());
         addressOnDB.setNumber(newAddress.getNumber());
         addressOnDB.setZipCode(newAddress.getZipCode());
         addressOnDB.setCity(newAddress.getCity());
@@ -94,12 +94,12 @@ public class AddressService {
     public Address fromDTO(AddressDTO addressDTO) {
         return new Address(
                 addressDTO.getId(),
-                addressDTO.getPublicPlace(),
+                addressDTO.getStreet(),
                 addressDTO.getNumber(),
                 addressDTO.getZipCode(),
                 addressDTO.getCity(),
-                addressDTO.getPerson(),
-                addressDTO.getMain()
+                addressDTO.getIsMain(),
+                addressDTO.getPerson()
         );
     }
 }

@@ -1,4 +1,4 @@
-package com.attornatus.project.resources;
+package com.attornatus.project.controllers;
 
 import com.attornatus.project.dto.AddressDTO;
 import com.attornatus.project.entities.Address;
@@ -16,7 +16,7 @@ import java.util.stream.Collectors;
 
 @RestController
 @RequestMapping("/address")
-public class AddressResource {
+public class AddressController {
 
     @Autowired
     AddressService addressService;
@@ -43,7 +43,7 @@ public class AddressResource {
             return ResponseEntity.created(uri).build();
         }
         catch (DataIntegrityViolationException e) {
-            if (addressDTO.getPublicPlace() == null) {
+            if (addressDTO.getStreet() == null) {
                 throw new InvalidPropertyException("Invalid property given on request", "Address", "PublicPlace");
             }
 
@@ -72,7 +72,8 @@ public class AddressResource {
             return ResponseEntity.noContent().build();
         }
         catch (DataIntegrityViolationException e) {
-            if (addressDTO.getPublicPlace() == null || addressDTO.getPublicPlace().length() > 45) {
+            if (addressDTO.getStreet() == null || addressDTO.
+            getStreet().length() > 45) {
                 throw new InvalidPropertyException("Invalid property given on request", "Address", "PublicPlace");
             }
 

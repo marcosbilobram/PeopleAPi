@@ -1,19 +1,12 @@
 package com.attornatus.project.config;
 
-import com.attornatus.project.entities.Address;
-import com.attornatus.project.entities.Person;
 import com.attornatus.project.repositories.AddressRepository;
 import com.attornatus.project.repositories.PersonRepository;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.boot.CommandLineRunner;
 import org.springframework.context.annotation.Configuration;
 
-import java.text.SimpleDateFormat;
-import java.util.Arrays;
-import java.util.List;
-
 @Configuration
-public class TestConfig implements CommandLineRunner {
+public class DataBaseSeeder /*implements CommandLineRunner*/ {
 
     @Autowired
     private PersonRepository personRepository;
@@ -21,7 +14,7 @@ public class TestConfig implements CommandLineRunner {
     @Autowired
     private AddressRepository addressRepository;
 
-    @Override
+    /*@Override
     public void run(String... args) throws Exception {
 
         SimpleDateFormat sdf = new SimpleDateFormat("dd/MM/yyyy");
@@ -50,6 +43,6 @@ public class TestConfig implements CommandLineRunner {
         personRepository.saveAll(Arrays.asList(person1, person2, person3));
         addressRepository.saveAll(Arrays.asList(address1, address2, address3));
 
-    }
+    }*/
 
 }

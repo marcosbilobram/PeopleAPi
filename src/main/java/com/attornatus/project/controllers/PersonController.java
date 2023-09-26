@@ -1,4 +1,4 @@
-package com.attornatus.project.resources;
+package com.attornatus.project.controllers;
 
 import com.attornatus.project.dto.AddressDTO;
 import com.attornatus.project.dto.PersonDTO;
@@ -20,7 +20,7 @@ import java.util.stream.Collectors;
 
 @RestController
 @RequestMapping("/person")
-public class PersonResource {
+public class PersonController {
 
     @Autowired
     PersonService personService;
