@@ -25,7 +25,7 @@ public class AddressDTO {
     @JsonFormat(pattern = "nnnnn-nnn")
     private String zipCode;
 
-    @Column(length = 20, nullable = false)
+    @Column(length = 35, nullable = false)
     private String city;
 
     private Boolean isMain = false;

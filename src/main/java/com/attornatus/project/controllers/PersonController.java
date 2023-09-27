@@ -36,7 +36,7 @@ public class PersonController {
     AddressService addressService;
 
     @GetMapping("/all")
-    public ResponseEntity<Page<PersonDataReturnDTO>> findAll(@ParameterObject @PageableDefault(size = 5) Pageable pageable) {
+    public ResponseEntity<Page<PersonDataReturnDTO>> findAll(@PageableDefault(size = 5) Pageable pageable) {
         Page<Person> people = personService.findAll(pageable);
         return ResponseEntity.ok().body(people.map(PersonDataReturnDTO::new));
     }
@@ -67,7 +67,7 @@ public class PersonController {
 
     @GetMapping(value = "/name")
     public ResponseEntity<List<PersonDataReturnDTO>> findPersonByName(@RequestParam("name") String name) {
-        List<PersonDataReturnDTO> list = personService.findByName(name).stream().map(p -> new PersonDataReturnDTO(p)).collect(Collectors.toList());
+        List<PersonDataReturnDTO> list = personService.findByName(name).stream().map(PersonDataReturnDTO::new).collect(Collectors.toList());
         return ResponseEntity.ok().body(list);
     }
 
