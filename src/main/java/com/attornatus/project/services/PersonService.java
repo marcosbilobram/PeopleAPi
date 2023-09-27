@@ -1,5 +1,6 @@
 package com.attornatus.project.services;
 
+import com.attornatus.project.dto.AddressDTO;
 import com.attornatus.project.dto.PersonDTO;
 import com.attornatus.project.entities.Address;
 import com.attornatus.project.entities.Person;
@@ -7,10 +8,11 @@ import com.attornatus.project.exceptions.ObjectNotFoundException;
 import com.attornatus.project.repositories.AddressRepository;
 import com.attornatus.project.repositories.PersonRepository;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
-import java.util.Optional;
 
 @Service
 public class PersonService {
@@ -22,36 +24,29 @@ public class PersonService {
     AddressRepository addressRep;
 
     @Autowired
-    AddressService adsSer;
+    AddressService addressService;
 
-    public List<Person> findAll() {
-        List<Person> list = personRep.findAll();
-
-        if (list.isEmpty()) {
-            throw new ObjectNotFoundException("There is no such data available");
+    public Page<Person> findAll(Pageable pageable) {
+        if (personRep.findAll(pageable).isEmpty()){
+            throw new ObjectNotFoundException("No such data found");
         }
-
-        return list;
+        else return personRep.findAll(pageable);
     }
 
     public Person findById(Long id) throws ObjectNotFoundException {
-        Optional<Person> person = personRep.findById(id);
-
-        if (!person.isPresent()) {
-            throw new ObjectNotFoundException("Person with id: " + id + " is not available");
-        }
-
-        return person.get();
+        return personRep.findById(id)
+                .orElseThrow(() -> new ObjectNotFoundException("Person with id " + id + " not found"));
     }
 
-    public Person insert(Person person) {
+    public Person insert(PersonDTO personDTO) {
+        Person person = parsePersonDto(personDTO);
         return personRep.save(person);
     }
 
-    public Person update(Person person) {
-        Person pers = findById(person.getId());
-        dataUpdater(pers, person);
-        return personRep.save(pers);
+    public Person update(PersonDTO personDto, Long id) {
+        Person personInDB = findById(id);
+        dataUpdater(personInDB, personDto);
+        return personRep.save(personInDB);
     }
 
     public void delete(Long id) {
@@ -61,13 +56,13 @@ public class PersonService {
 
     public void setMainAddress(Long personId, Long addressID) {
         findById(personId);
-        adsSer.findById(addressID);
+        addressService.findById(addressID);
 
-        List<Address> listAds = adsSer.getPersonAddressesById(personId);
+        List<Address> listAds = addressService.getPersonAddressesById(personId);
         Address address = null;
 
         for (Address ads : listAds) {
-            ads.setMain(false);
+            ads.setIsMain(false);
 
             if (ads.getId() == addressID) {
                 address = ads;
@@ -79,44 +74,35 @@ public class PersonService {
             throw new ObjectNotFoundException("Address with id: " + addressID + " is not available");
         }
 
-        address.setMain(true);
+        address.setIsMain(true);
 
         addressRep.save(address);
 
     }
 
-    public void insertAddress(Long personId, Address address) {
+    public void insertAddress(Long personId, AddressDTO addressDTO) {
+        Address address = addressService.parseAddressDto(addressDTO);
         Person person = findById(personId);
         person.getAddresses().add(address);
+        personRep.saveAndFlush(person);
         address.setPerson(person);
-        personRep.save(person);
+        addressRep.saveAndFlush(address);
     }
 
     public List<Person> findByName(String name) {
-        List<Person> list = personRep.findByNameContainingIgnoreCase(name);
-
-        if (list.isEmpty()) {
-            throw new ObjectNotFoundException("There is no such person with name: " + name);
-
-        }
-        else {
-            return list;
-        }
-
+        return personRep.findByNameContainingIgnoreCase(name)
+                .orElseThrow(()-> new ObjectNotFoundException("No person with name".concat(name).concat("found")));
     }
 
-    public void dataUpdater(Person personOnDB, Person newPerson) {
+    public void dataUpdater(Person personOnDB, PersonDTO newPerson) {
         personOnDB.setName(newPerson.getName());
         personOnDB.setBirthDay(newPerson.getBirthDay());
     }
 
-    public Person fromDTO(PersonDTO personDTO) {
+    public Person parsePersonDto(PersonDTO personDTO) {
         return new Person(
-                personDTO.getId(),
                 personDTO.getName(),
-                personDTO.getBirthDay(),
-                personDTO.getAddresses()
+                personDTO.getBirthDay()
         );
     }
-
 }

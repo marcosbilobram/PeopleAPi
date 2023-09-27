@@ -1,6 +1,7 @@
 package com.attornatus.project.controllers;
 
 import com.attornatus.project.dto.AddressDTO;
+import com.attornatus.project.dto.PersonDataReturnDTO;
 import com.attornatus.project.dto.PersonDTO;
 import com.attornatus.project.entities.Address;
 import com.attornatus.project.entities.Person;
@@ -8,8 +9,14 @@ import com.attornatus.project.exceptions.InvalidPropertyException;
 import com.attornatus.project.exceptions.ObjectNotFoundException;
 import com.attornatus.project.services.AddressService;
 import com.attornatus.project.services.PersonService;
+import jakarta.validation.Valid;
+import org.springdoc.core.annotations.ParameterObject;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.dao.DataIntegrityViolationException;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
+import org.springframework.data.web.PageableDefault;
+import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.servlet.support.ServletUriComponentsBuilder;
@@ -28,70 +35,39 @@ public class PersonController {
     @Autowired
     AddressService addressService;
 
-    @GetMapping
-    public ResponseEntity<List<PersonDTO>> findAll() {
-        List<Person> people = personService.findAll();
-        List<PersonDTO> peopleDTO = people.stream().map(p -> new PersonDTO(p)).collect(Collectors.toList());
-        return ResponseEntity.ok().body(peopleDTO);
+    @GetMapping("/all")
+    public ResponseEntity<Page<PersonDataReturnDTO>> findAll(@ParameterObject @PageableDefault(size = 5) Pageable pageable) {
+        Page<Person> people = personService.findAll(pageable);
+        return ResponseEntity.ok().body(people.map(PersonDataReturnDTO::new));
     }
 
     @GetMapping(value = "/{id}")
-    public ResponseEntity<PersonDTO> findById(@PathVariable Long id) throws ObjectNotFoundException {
+    public ResponseEntity<PersonDataReturnDTO> findById(@PathVariable Long id) throws ObjectNotFoundException {
         Person person = personService.findById(id);
-        return ResponseEntity.ok().body(new PersonDTO(person));
+        return ResponseEntity.ok().body(new PersonDataReturnDTO(person));
     }
 
     @PostMapping(value = "/add")
-    public ResponseEntity<Void> insert(@RequestBody PersonDTO personDTO) {
-        try {
-            Person person = personService.fromDTO(personDTO);
-            person = personService.insert(person);
-            URI uri = ServletUriComponentsBuilder.fromCurrentRequest().path("/{id}").buildAndExpand(person.getId()).toUri();
-            return ResponseEntity.created(uri).build();
-        }
-        catch (DataIntegrityViolationException e) {
-            if (personDTO.getName() == null || personDTO.getName().length() > 60) {
-                throw new InvalidPropertyException("Invalid property given on request", "Person", "Name");
-            }
-
-            if (personDTO.getBirthDay() == null) {
-                throw new InvalidPropertyException("Invalid property given on request", "Person", "Birthday");
-            }
-
-        }
-        return null;
+    public ResponseEntity<Void> insert(@RequestBody @Valid PersonDTO personDTO) {
+        personService.insert(personDTO);
+        return ResponseEntity.status(HttpStatus.CREATED).build();
     }
 
     @PutMapping(value = "/{id}/edit")
-    public ResponseEntity<Void> update(@RequestBody PersonDTO personDTO, @PathVariable Long id) {
-        try {
-            Person person = personService.fromDTO(personDTO);
-            person.setId(id);
-            person = personService.update(person);
-            return ResponseEntity.noContent().build();
-        }
-        catch (DataIntegrityViolationException e) {
-            if (personDTO.getName() == null || personDTO.getName().length() > 60) {
-                throw new InvalidPropertyException("Invalid property given on request", "Person", "Name");
-            }
-
-            if (personDTO.getBirthDay() == null) {
-                throw new InvalidPropertyException("Invalid property given on request", "Person", "Birthday");
-            }
-
-        }
-        return null;
+    public ResponseEntity<Void> update(@RequestBody @Valid PersonDTO personDTO, @PathVariable Long id) {
+        personService.update(personDTO, id);
+        return ResponseEntity.status(HttpStatus.OK).build();
     }
 
     @DeleteMapping(value = "/{id}")
     public ResponseEntity<Void> delete(@PathVariable Long id) {
         personService.delete(id);
-        return ResponseEntity.noContent().build();
+        return ResponseEntity.status(HttpStatus.OK).build();
     }
 
-    @GetMapping(value = "/filter")
-    public ResponseEntity<List<PersonDTO>> findPersonByName(@RequestParam("name") String name) {
-        List<PersonDTO> list = personService.findByName(name).stream().map(p -> new PersonDTO(p)).collect(Collectors.toList());
+    @GetMapping(value = "/name")
+    public ResponseEntity<List<PersonDataReturnDTO>> findPersonByName(@RequestParam("name") String name) {
+        List<PersonDataReturnDTO> list = personService.findByName(name).stream().map(p -> new PersonDataReturnDTO(p)).collect(Collectors.toList());
         return ResponseEntity.ok().body(list);
     }
 
@@ -102,44 +78,19 @@ public class PersonController {
     }
 
     @PostMapping(value = "/{personId}/ads/add")
-    public ResponseEntity<Void> insertPersonAddress(@PathVariable Long personId, @RequestBody AddressDTO addressDTO) {
-        try {
-            personService.findById(personId);
-            Address ads = addressService.fromDTO(addressDTO);
-            personService.insertAddress(personId, ads);
-            URI uri = ServletUriComponentsBuilder.fromCurrentRequest().path("/{id}").buildAndExpand(ads.getId()).toUri();
-            return ResponseEntity.created(uri).build();
-        }
-        catch (DataIntegrityViolationException e) {
-            if (addressDTO.getPublicPlace() == null) {
-                throw new InvalidPropertyException("Invalid property given on request", "Address", "PublicPlace");
-            }
-
-            if (addressDTO.getNumber() == null) {
-                throw new InvalidPropertyException("Invalid property given on request", "Address", "Number");
-            }
-
-            if (addressDTO.getZipCode() == null || addressDTO.getZipCode().length() > 8) {
-                throw new InvalidPropertyException("Invalid property given on request", "Address", "ZipCode");
-            }
-
-            if (addressDTO.getCity() == null) {
-                throw new InvalidPropertyException("Invalid property given on request", "Address", "City");
-            }
-
-        }
-
-        return null;
+    public ResponseEntity<Void> insertPersonAddress(@PathVariable Long personId, @RequestBody @Valid AddressDTO addressDTO) {
+            personService.insertAddress(personId, addressDTO);
+            return ResponseEntity.status(HttpStatus.CREATED).build();
     }
 
-    @GetMapping(value = "/{personId}/ads")
+    @GetMapping(value = "/{personId}/address")
     public ResponseEntity<List<AddressDTO>> findPersonAdresses(@PathVariable Long personId) {
         List<Address> ads = addressService.getPersonAddressesById(personId);
         List<AddressDTO> list = ads.stream().map(ad -> new AddressDTO(ad)).toList();
         return ResponseEntity.ok().body(list);
     }
 
-    @GetMapping(value = "/{personId}/ads/main")
+    @GetMapping(value = "/{personId}/address/main")
     public ResponseEntity<AddressDTO> findMainAddress(@PathVariable Long personId) {
         Address address = addressService.getMainAddress(personId);
         return ResponseEntity.ok().body(new AddressDTO(address));

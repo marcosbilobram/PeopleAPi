@@ -1,61 +1,25 @@
 package com.attornatus.project.dto;
 
-import com.attornatus.project.entities.Address;
-import com.attornatus.project.entities.Person;
 import com.fasterxml.jackson.annotation.JsonFormat;
+import jakarta.persistence.Column;
+import lombok.AllArgsConstructor;
+import lombok.Builder;
+import lombok.Data;
+import lombok.NoArgsConstructor;
 
-import java.util.ArrayList;
 import java.util.Date;
-import java.util.List;
 
+@AllArgsConstructor
+@NoArgsConstructor
+@Data
+@Builder
 public class PersonDTO {
 
-    private Long id;
-    private String name; // Nome
+    @Column(length = 60, nullable = false)
+    private String name;
+
+    @Column(nullable = false)
     @JsonFormat(pattern = "dd/MM/yyyy")
-    private Date birthDay; // Data de nascimento
+    private Date birthDay;
 
-    private List<Address> addresses = new ArrayList<>(); // Endereços
-
-    public PersonDTO() {
-    }
-
-    public PersonDTO(Person person) {
-        id = person.getId();
-        name = person.getName();
-        birthDay = person.getBirthDay();
-        addresses = person.getAddresses();
-    }
-
-    public Long getId() {
-        return id;
-    }
-
-    public void setId(Long id) {
-        this.id = id;
-    }
-
-    public String getName() {
-        return name;
-    }
-
-    public void setName(String name) {
-        this.name = name;
-    }
-
-    public Date getBirthDay() {
-        return birthDay;
-    }
-
-    public void setBirthDay(Date birthDay) {
-        this.birthDay = birthDay;
-    }
-
-    public List<Address> getAddresses() {
-        return addresses;
-    }
-
-    public void setAddresses(List<Address> addresses) {
-        this.addresses = addresses;
-    }
 }

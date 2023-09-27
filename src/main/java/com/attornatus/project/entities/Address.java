@@ -23,19 +23,19 @@ public class Address implements Serializable {
     private Long id;
 
     @Column(length = 45, nullable = false)
-    private String street; //logradouro
+    private String street;
 
     @Column(nullable = false)
-    private Integer number; //número
+    private Integer number;
 
     @Column(length = 9, nullable = false)
     @JsonFormat(pattern = "nnnnn-nnn")
-    private String zipCode; //CEP
+    private String zipCode;
 
     @Column(length = 20, nullable = false)
-    private String city; //cidade
+    private String city;
 
-    private Boolean isMain = false; //atributo que definirá se o endereço é o principal ou não
+    private Boolean isMain = false;
 
     @ManyToOne
     @JoinColumn(
@@ -43,5 +43,13 @@ public class Address implements Serializable {
             referencedColumnName = "id"
     )
     @JsonIgnore
-    private Person person; //classe pessoa
+    private Person person;
+
+    public Address(String street, Integer number, String zipCode, String city, Boolean isMain) {
+        this.street = street;
+        this.number = number;
+        this.zipCode = zipCode;
+        this.city = city;
+        this.isMain = isMain;
+    }
 }

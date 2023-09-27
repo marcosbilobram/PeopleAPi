@@ -2,15 +2,22 @@ package com.attornatus.project.entities;
 
 import com.fasterxml.jackson.annotation.JsonFormat;
 import jakarta.persistence.*;
+import lombok.AllArgsConstructor;
+import lombok.Builder;
+import lombok.Data;
+import lombok.NoArgsConstructor;
 
 import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
 
-//Classe de Pessoa
 @Entity
 @Table(name = "tb_person")
+@AllArgsConstructor
+@NoArgsConstructor
+@Data
+@Builder
 public class Person implements Serializable {
 
     @Id
@@ -18,59 +25,27 @@ public class Person implements Serializable {
     private Long id;
 
     @Column(length = 60, nullable = false)
-    private String name; //Nome
+    private String name;
 
     @Column(nullable = false)
     @JsonFormat(pattern = "dd/MM/yyyy")
-    private Date birthDay; //Data de nascimento
+    private Date birthDay;
 
     @OneToMany(cascade = CascadeType.ALL)
     @JoinColumn(
             name = "person_id",
             referencedColumnName = "id"
     )
-    private List<Address> addresses = new ArrayList<>(); //Endereços
+    private List<Address> addresses = new ArrayList<>();
 
-    public Person() {
-    }
-
-    public Person(Long id, String name, Date birthDay, List<Address> addresses) {
-        this.id = id;
+    public Person(String name, Date birthDay, List<Address> addresses) {
         this.name = name;
         this.birthDay = birthDay;
         this.addresses = addresses;
     }
 
-    public void setId(Long id) {
-        this.id = id;
-    }
-
-    public Long getId() {
-        return id;
-    }
-
-    public String getName() {
-        return name;
-    }
-
-    public void setName(String name) {
+    public Person(String name, Date birthDay) {
         this.name = name;
-    }
-
-    public Date getBirthDay() {
-        return birthDay;
-    }
-
-    public void setBirthDay(Date birthDay) {
         this.birthDay = birthDay;
     }
-
-    public List<Address> getAddresses() {
-        return addresses;
-    }
-
-    public void setAddresses(List<Address> addresses) {
-        this.addresses = addresses;
-    }
-
 }

@@ -91,15 +91,13 @@ public class AddressService {
         addressOnDB.setCity(newAddress.getCity());
     }
 
-    public Address fromDTO(AddressDTO addressDTO) {
+    public Address parseAddressDto(AddressDTO addressDTO) {
         return new Address(
-                addressDTO.getId(),
                 addressDTO.getStreet(),
                 addressDTO.getNumber(),
                 addressDTO.getZipCode(),
                 addressDTO.getCity(),
-                addressDTO.getIsMain(),
-                addressDTO.getPerson()
+                addressDTO.getIsMain()
         );
     }
 }

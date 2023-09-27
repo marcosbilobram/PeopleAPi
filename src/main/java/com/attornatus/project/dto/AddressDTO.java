@@ -2,6 +2,8 @@ package com.attornatus.project.dto;
 
 import com.attornatus.project.entities.Address;
 import com.attornatus.project.entities.Person;
+import com.fasterxml.jackson.annotation.JsonFormat;
+import jakarta.persistence.Column;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Data;
@@ -13,17 +15,22 @@ import lombok.NoArgsConstructor;
 @Builder
 public class AddressDTO {
 
-    private Long id;
-    private String street; //logradouro
-    private Integer number; //número
-    private String zipCode; //CEP
-    private String city; //cidade
-    private Boolean isMain;
+    @Column(length = 45, nullable = false)
+    private String street;
 
-    private Person person; //classe pessoa
+    @Column(nullable = false)
+    private Integer number;
+
+    @Column(length = 9, nullable = false)
+    @JsonFormat(pattern = "nnnnn-nnn")
+    private String zipCode;
+
+    @Column(length = 20, nullable = false)
+    private String city;
+
+    private Boolean isMain = false;
 
     public AddressDTO(Address address) {
-        id = address.getId();
         street = address.getStreet();
         number = address.getNumber();
         zipCode = address.getZipCode();

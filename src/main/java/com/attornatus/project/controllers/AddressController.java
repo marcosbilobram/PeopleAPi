@@ -24,7 +24,7 @@ public class AddressController {
     @GetMapping
     public ResponseEntity<List<AddressDTO>> findAll() {
         List<Address> addresses = addressService.findAll();
-        List<AddressDTO> addressDTOS = addresses.stream().map(ad -> new AddressDTO(ad)).collect(Collectors.toList());
+        List<AddressDTO> addressDTOS = addresses.stream().map(AddressDTO::new).collect(Collectors.toList());
         return ResponseEntity.ok().body(addressDTOS);
     }
 
@@ -37,7 +37,7 @@ public class AddressController {
     @PostMapping
     public ResponseEntity<Void> insert(@RequestBody AddressDTO addressDTO) {
         try {
-            Address ads = addressService.fromDTO(addressDTO);
+            Address ads = addressService.parseAddressDto(addressDTO);
             ads = addressService.insert(ads);
             URI uri = ServletUriComponentsBuilder.fromCurrentRequestUri().path("/{id}").buildAndExpand(ads.getId()).toUri();
             return ResponseEntity.created(uri).build();
@@ -66,7 +66,7 @@ public class AddressController {
     @PutMapping(value = "/{id}/edit")
     public ResponseEntity<Void> update(@RequestBody AddressDTO addressDTO, @PathVariable Long id) {
         try {
-            Address ads = addressService.fromDTO(addressDTO);
+            Address ads = addressService.parseAddressDto(addressDTO);
             ads.setId(id);
             ads = addressService.update(ads);
             return ResponseEntity.noContent().build();
