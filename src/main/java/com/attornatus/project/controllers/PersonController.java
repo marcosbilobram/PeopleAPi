@@ -1,6 +1,7 @@
 package com.attornatus.project.controllers;
 
 import com.attornatus.project.dto.AddressDTO;
+import com.attornatus.project.dto.AddressEditDTO;
 import com.attornatus.project.dto.PersonDataReturnDTO;
 import com.attornatus.project.dto.PersonDTO;
 import com.attornatus.project.entities.Address;
@@ -312,7 +313,7 @@ public class PersonController {
                                     }
                                 """)
             })})
-    @PutMapping(value = "/{personId}/ads/{addressId}/edit")
+    @PutMapping(value = "/{personId}/ads/{addressId}/setMain")
     public ResponseEntity<Void> setMainAddress(@PathVariable Long personId, @PathVariable Long addressId) {
         personService.setMainAddress(personId, addressId);
         return ResponseEntity.noContent().build();
@@ -381,7 +382,7 @@ public class PersonController {
                     })})
     })
     @GetMapping(value = "/{personId}/ads")
-    public ResponseEntity<List<AddressDTO>> findPersonAdresses(@PathVariable Long personId) {
+    public ResponseEntity<List<AddressDTO>> findPersonAddresses(@PathVariable Long personId) {
         List<Address> ads = addressService.getPersonAddressesById(personId);
         List<AddressDTO> list = ads.stream().map(AddressDTO::new).toList();
         return ResponseEntity.ok().body(list);
@@ -421,5 +422,11 @@ public class PersonController {
     public ResponseEntity<AddressDTO> findMainAddress(@PathVariable Long personId) {
         Address address = addressService.getMainAddress(personId);
         return ResponseEntity.ok().body(new AddressDTO(address));
+    }
+
+    @PutMapping(value = "/{personId}/ads/{addressId}/edit")
+    public ResponseEntity<Void> editAddress(@PathVariable Long personId, @PathVariable Long addressId, @RequestBody AddressEditDTO addressEditDTO) {
+        personService.editAddress(personId, addressId, addressEditDTO);
+        return ResponseEntity.status(HttpStatus.OK).build();
     }
 }

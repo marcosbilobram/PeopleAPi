@@ -1,6 +1,7 @@
 package com.attornatus.project.services;
 
 import com.attornatus.project.dto.AddressDTO;
+import com.attornatus.project.dto.AddressEditDTO;
 import com.attornatus.project.entities.Address;
 import com.attornatus.project.entities.Person;
 import com.attornatus.project.exceptions.ObjectNotFoundException;
@@ -39,12 +40,8 @@ public class AddressService {
         return ads.get();
     }
 
-    public Address insert(Address address) {
-        return addressRep.save(address);
-    }
-
-    public Address update(Address address) {
-        Address ads = findById(address.getId());
+    public Address update(Long id, AddressEditDTO address) {
+        Address ads = findById(id);
         dataUpdater(ads, address);
         return addressRep.save(ads);
     }
@@ -72,19 +69,18 @@ public class AddressService {
     public Address getMainAddress(Long id) {
         Optional<Person> person = personRep.findById(id);
 
-        if (!person.isPresent()) {
+        if (!person.isPresent())
             throw new ObjectNotFoundException("Person with id: " + id + " is not available");
-        }
 
         Address ads = addressRep.getAddressByIsMainEqualsTrue(id);
 
-        if (ads == null) {
+        if (ads == null)
             throw new ObjectNotFoundException("There is no main address available in person with id: " + id);
-        }
+
         return ads;
     }
 
-    public void dataUpdater(Address addressOnDB, Address newAddress) {
+    public void dataUpdater(Address addressOnDB, AddressEditDTO newAddress) {
         addressOnDB.setStreet(newAddress.getStreet());
         addressOnDB.setNumber(newAddress.getNumber());
         addressOnDB.setZipCode(newAddress.getZipCode());

@@ -1,6 +1,7 @@
 package com.attornatus.project.services;
 
 import com.attornatus.project.dto.AddressDTO;
+import com.attornatus.project.dto.AddressEditDTO;
 import com.attornatus.project.dto.PersonDTO;
 import com.attornatus.project.entities.Address;
 import com.attornatus.project.entities.Person;
@@ -119,5 +120,20 @@ public class PersonService {
                 personDTO.getName(),
                 personDTO.getBirthDay()
         );
+    }
+
+    public void editAddress(Long personId, Long addressId, AddressEditDTO addressEditDTO) {
+        Person person = findById(personId);
+
+        for(Address ads : person.getAddresses()){
+            if (ads.getId().equals(addressId)){
+                addressService.update(ads.getId(), addressEditDTO);
+            } else
+                throw new ObjectNotFoundException((
+                        "User ")
+                        .concat(person.getName())
+                        .concat(" doesn't have address with id ")
+                        .concat(addressId.toString()));
+        }
     }
 }
