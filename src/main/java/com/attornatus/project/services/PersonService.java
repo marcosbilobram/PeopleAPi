@@ -4,14 +4,17 @@ import com.attornatus.project.dto.AddressDTO;
 import com.attornatus.project.dto.PersonDTO;
 import com.attornatus.project.entities.Address;
 import com.attornatus.project.entities.Person;
+import com.attornatus.project.exceptions.InvalidPropertyException;
 import com.attornatus.project.exceptions.ObjectNotFoundException;
 import com.attornatus.project.repositories.AddressRepository;
 import com.attornatus.project.repositories.PersonRepository;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.dao.DataIntegrityViolationException;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 
+import java.util.Calendar;
 import java.util.List;
 
 @Service
@@ -39,14 +42,26 @@ public class PersonService {
     }
 
     public Person insert(PersonDTO personDTO) {
+        if(personDTO.getBirthDay().after(Calendar.getInstance().getTime())){
+            throw new InvalidPropertyException("Invalid date", "Person","Birthday");
+        }
         Person person = parsePersonDto(personDTO);
-        return personRep.save(person);
+        try{
+            return personRep.save(person);
+        }catch (Exception e) {
+            throw new DataIntegrityViolationException("Error trying to save new person");
+        }
+
     }
 
     public Person update(PersonDTO personDto, Long id) {
         Person personInDB = findById(id);
         dataUpdater(personInDB, personDto);
-        return personRep.save(personInDB);
+        try{
+            return personRep.save(personInDB);
+        }catch (Exception e) {
+            throw new DataIntegrityViolationException("Error trying to save new person");
+        }
     }
 
     public void delete(Long id) {
