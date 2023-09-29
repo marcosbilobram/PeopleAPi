@@ -15,8 +15,11 @@ import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 
+import java.lang.reflect.Field;
 import java.util.Calendar;
+import java.util.Date;
 import java.util.List;
+import java.util.stream.Stream;
 
 @Service
 public class PersonService {
@@ -110,9 +113,15 @@ public class PersonService {
                 .orElseThrow(()-> new ObjectNotFoundException("No person with name".concat(name).concat("found")));
     }
 
-    public void dataUpdater(Person personOnDB, PersonDTO newPerson) {
-        personOnDB.setName(newPerson.getName());
-        personOnDB.setBirthDay(newPerson.getBirthDay());
+    public void dataUpdater(Person personOnDB, PersonDTO newPerson){
+        String name = (newPerson.getName() != null && !newPerson.getName().isEmpty()
+                && !newPerson.getName().isBlank()) ? newPerson.getName() : personOnDB.getName();
+        personOnDB.setName(name);
+
+        Date date = (newPerson.getBirthDay() != null
+                && !newPerson.getBirthDay().after(Calendar.getInstance().getTime())) ? newPerson.getBirthDay()
+                : personOnDB.getBirthDay();
+        personOnDB.setBirthDay(date);
     }
 
     public Person parsePersonDto(PersonDTO personDTO) {
@@ -123,17 +132,32 @@ public class PersonService {
     }
 
     public void editAddress(Long personId, Long addressId, AddressEditDTO addressEditDTO) {
-        Person person = findById(personId);
+        if(verifyAddressInPersonAddressess(personId, addressId)){
+            addressService.update(addressId, addressEditDTO);
+        }else
+            throw new ObjectNotFoundException((
+                    "User ")
+                    .concat(" doesn't have address with id ")
+                    .concat(addressId.toString()));
+    }
 
+    public void deleteAddress(Long personId, Long addressId){
+        if(verifyAddressInPersonAddressess(personId, addressId)){
+            addressService.delete(addressId);
+        }else
+            throw new ObjectNotFoundException((
+                    "User ")
+                    .concat(" doesn't have address with id ")
+                    .concat(addressId.toString()));
+    }
+
+    public boolean verifyAddressInPersonAddressess(Long personId, Long addressId){
+        Person person = findById(personId);
         for(Address ads : person.getAddresses()){
             if (ads.getId().equals(addressId)){
-                addressService.update(ads.getId(), addressEditDTO);
-            } else
-                throw new ObjectNotFoundException((
-                        "User ")
-                        .concat(person.getName())
-                        .concat(" doesn't have address with id ")
-                        .concat(addressId.toString()));
+                return true;
+            }
         }
+        return false;
     }
 }

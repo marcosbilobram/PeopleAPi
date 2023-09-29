@@ -81,10 +81,20 @@ public class AddressService {
     }
 
     public void dataUpdater(Address addressOnDB, AddressEditDTO newAddress) {
-        addressOnDB.setStreet(newAddress.getStreet());
-        addressOnDB.setNumber(newAddress.getNumber());
-        addressOnDB.setZipCode(newAddress.getZipCode());
-        addressOnDB.setCity(newAddress.getCity());
+        String street = (newAddress.getStreet() != null && !newAddress.getStreet().isEmpty()
+                && !newAddress.getStreet().isBlank()) ? newAddress.getStreet() : addressOnDB.getStreet();
+        addressOnDB.setStreet(street);
+
+        Integer number = (newAddress.getNumber() != null) ? newAddress.getNumber() : addressOnDB.getNumber();
+        addressOnDB.setNumber(number);
+
+        String CEP = (newAddress.getZipCode() != null && !newAddress.getZipCode().isEmpty()
+                && !newAddress.getZipCode().isBlank()) ? newAddress.getZipCode() : addressOnDB.getZipCode();
+        addressOnDB.setZipCode(CEP);
+
+        String city = (newAddress.getCity() != null && !newAddress.getCity().isEmpty()
+                && !newAddress.getCity().isBlank()) ? newAddress.getCity() : addressOnDB.getCity();
+        addressOnDB.setCity(city);
     }
 
     public Address parseAddressDto(AddressDTO addressDTO) {

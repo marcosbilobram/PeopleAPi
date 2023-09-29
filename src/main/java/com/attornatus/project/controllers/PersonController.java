@@ -218,8 +218,25 @@ public class PersonController {
         return ResponseEntity.status(HttpStatus.CREATED).build();
     }
 
+    @Operation(
+            summary = "Editar dados de uma pessoa",
+            description = "Insere novo endereço para pessoa no banco"
+    )
+    @ApiResponses({
+            @ApiResponse(responseCode = "200", description = "Edição realizada com sucesso"),
+            @ApiResponse(responseCode = "400", description = "Erro na inserção",
+                    content = {@Content(mediaType = "application/json", examples = {
+                            @ExampleObject(name = "DataIntegrityViolationException",
+                                    value = """
+                                            {
+                                              "status": "BAD_REQUEST",
+                                              "message": "Error message"
+                                            }
+                                            """)
+                    })})
+    })
     @PutMapping(value = "/{id}/edit")
-    public ResponseEntity<Void> update(@RequestBody @Valid PersonDTO personDTO, @PathVariable Long id) {
+    public ResponseEntity<Void> editPerson(@RequestBody @Valid PersonDTO personDTO, @PathVariable Long id) {
         personService.update(personDTO, id);
         return ResponseEntity.status(HttpStatus.OK).build();
     }
@@ -427,6 +444,12 @@ public class PersonController {
     @PutMapping(value = "/{personId}/ads/{addressId}/edit")
     public ResponseEntity<Void> editAddress(@PathVariable Long personId, @PathVariable Long addressId, @RequestBody AddressEditDTO addressEditDTO) {
         personService.editAddress(personId, addressId, addressEditDTO);
+        return ResponseEntity.status(HttpStatus.OK).build();
+    }
+
+    @DeleteMapping(value = "/{personId}/ads/{addressId}")
+    public ResponseEntity<Void> deleteAddress(@PathVariable Long personId, @PathVariable Long addressId) {
+        personService.deleteAddress(personId, addressId);
         return ResponseEntity.status(HttpStatus.OK).build();
     }
 }
