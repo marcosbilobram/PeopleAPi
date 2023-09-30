@@ -15,11 +15,10 @@ import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 
-import java.lang.reflect.Field;
 import java.util.Calendar;
 import java.util.Date;
 import java.util.List;
-import java.util.stream.Stream;
+import java.util.stream.Collectors;
 
 @Service
 public class PersonService {
@@ -58,7 +57,7 @@ public class PersonService {
 
     }
 
-    public Person update(PersonDTO personDto, Long id) {
+    public Person editPerson(PersonDTO personDto, Long id) {
         Person personInDB = findById(id);
         dataUpdater(personInDB, personDto);
         try{
@@ -82,21 +81,14 @@ public class PersonService {
 
         for (Address ads : listAds) {
             ads.setIsMain(false);
-
-            if (ads.getId() == addressID) {
-                address = ads;
-            }
-
+            if (ads.getId() == addressID) address = ads;
         }
 
-        if (address == null) {
-            throw new ObjectNotFoundException("Address with id: " + addressID + " is not available");
-        }
+        if (address == null)
+            throw new ObjectNotFoundException("Address with id: " + addressID + " not found");
 
         address.setIsMain(true);
-
         addressRep.save(address);
-
     }
 
     public void insertAddress(Long personId, AddressDTO addressDTO) {

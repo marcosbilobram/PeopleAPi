@@ -6,7 +6,6 @@ import com.attornatus.project.dto.PersonDataReturnDTO;
 import com.attornatus.project.dto.PersonDTO;
 import com.attornatus.project.entities.Address;
 import com.attornatus.project.entities.Person;
-import com.attornatus.project.exceptions.InvalidPropertyException;
 import com.attornatus.project.exceptions.ObjectNotFoundException;
 import com.attornatus.project.services.AddressService;
 import com.attornatus.project.services.PersonService;
@@ -18,16 +17,13 @@ import io.swagger.v3.oas.annotations.responses.ApiResponses;
 import jakarta.validation.Valid;
 import org.springdoc.core.annotations.ParameterObject;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.dao.DataIntegrityViolationException;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.web.PageableDefault;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
-import org.springframework.web.servlet.support.ServletUriComponentsBuilder;
 
-import java.net.URI;
 import java.util.List;
 import java.util.stream.Collectors;
 
@@ -237,7 +233,7 @@ public class PersonController {
     })
     @PutMapping(value = "/{id}/edit")
     public ResponseEntity<Void> editPerson(@RequestBody @Valid PersonDTO personDTO, @PathVariable Long id) {
-        personService.update(personDTO, id);
+        personService.editPerson(personDTO, id);
         return ResponseEntity.status(HttpStatus.OK).build();
     }
 
