@@ -9,6 +9,7 @@ import com.attornatus.project.services.AddressService;
 import com.attornatus.project.services.PersonService;
 import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.BeforeAll;
+import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.InjectMocks;
@@ -41,7 +42,7 @@ public class PersonServiceTest {
     @InjectMocks
     private PersonService personService;
 
-    @InjectMocks
+    @Mock
     private AddressService addressService;
 
     @Test
@@ -76,7 +77,7 @@ public class PersonServiceTest {
         personRepository.save(personToSave);
         when(personRepository.findById(Mockito.anyLong())).thenReturn(Optional.of(personToSave));
 
-        Person person = personRepository.findById(1L).get();
+        Person person = personService.findById(1L);
 
         assertThat(person).isNotNull();
         assertThat(person.getId()).isEqualTo(1L);
@@ -123,18 +124,20 @@ public class PersonServiceTest {
         address2.setIsMain(false);
         address.setPerson(personToSave);
         address2.setPerson(personToSave);
-        addressRepository.saveAllAndFlush(List.of(address, address2));
+        addressRepository.saveAll(List.of(address, address2));
         personToSave.setAddresses(List.of(address, address2));
-        personRepository.saveAndFlush(personToSave);
+        personRepository.save(personToSave);
 
         when(personRepository.findById(1L)).thenReturn(Optional.of(personToSave));
-        when(addressRepository.getAllByPersonId(1L)).thenReturn(List.of(address));
-        when(addressRepository.getAddressByIsMainEqualsTrue(1L)).thenReturn(Mockito.any(Address.class));
-        when(addressRepository.findById(1L)).thenReturn(Optional.of(address));
-        when(addressService.getPersonAddressesById(1L)).thenReturn(List.of(address));
-        verify(personService, times(1)).setMainAddress(1L, 2L);
+        //when(addressRepository.findById(2L)).thenReturn(Optional.of(address2));
+        //when(personRepository.findById(1L)).thenReturn(Optional.of(personToSave));
+       //when(addressRepository.getAllByPersonId(1L)).thenReturn(List.of(address, address2));
+        when(addressService.getPersonAddressesById(personToSave.getId())).thenReturn(List.of(address, address2));
+        when(addressRepository.save(Mockito.any(Address.class))).thenReturn(address2);
+        when(addressService.findById(1L)).thenReturn(address);
+        when(addressService.findById(2L)).thenReturn(address2);
 
-        personService.setMainAddress(1L, 2L);
+        personService.setMainAddress(personToSave.getId(), address2.getId());
         Address addressOnDb1 = addressService.findById(1L);
         Address addressOnDb2 = addressService.findById(2L);
 
@@ -142,6 +145,7 @@ public class PersonServiceTest {
         assertThat(addressOnDb2).isNotNull();
         assertThat(addressOnDb1.getIsMain()).isEqualTo(false);
         assertThat(addressOnDb2.getIsMain()).isEqualTo(true);
+        //verify(personService, atLeastOnce()).setMainAddress(1L, 2L);
     }
 
     public Person personBuilder() throws Exception {

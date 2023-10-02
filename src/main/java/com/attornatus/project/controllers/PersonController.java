@@ -329,7 +329,7 @@ public class PersonController {
     @PutMapping(value = "/{personId}/ads/{addressId}/setMain")
     public ResponseEntity<Void> setMainAddress(@PathVariable Long personId, @PathVariable Long addressId) {
         personService.setMainAddress(personId, addressId);
-        return ResponseEntity.noContent().build();
+        return ResponseEntity.status(HttpStatus.OK).build();
     }
 
     @Operation(
