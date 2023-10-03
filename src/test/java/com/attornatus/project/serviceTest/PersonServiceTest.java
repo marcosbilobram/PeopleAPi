@@ -1,5 +1,7 @@
 package com.attornatus.project.serviceTest;
 
+import com.attornatus.project.dto.AddressDTO;
+import com.attornatus.project.dto.AddressEditDTO;
 import com.attornatus.project.dto.PersonDTO;
 import com.attornatus.project.entities.Address;
 import com.attornatus.project.entities.Person;
@@ -148,6 +150,78 @@ public class PersonServiceTest {
         //verify(personService, atLeastOnce()).setMainAddress(1L, 2L);
     }
 
+    @Test
+    public void mustReturnUserWithGivenName() throws Exception {
+        List<Person> personsToSave = personListBuilder();
+        Person marcos = personsToSave.get(0);
+        personRepository.saveAllAndFlush(personsToSave);
+
+        when(personRepository.findByNameContainingIgnoreCase("Marcos")).thenReturn(Optional.of(List.of(marcos)));
+
+        List<Person> personSearch = personService.findByName("Marcos");
+
+        assertThat(personSearch).isNotNull();
+        assertThat(personSearch).isNotEmpty();
+        assertThat(personSearch.get(0).getName()).isEqualTo(marcos.getName());
+    }
+
+    @Test
+    public void mustInsertNewAddressInPersonData() throws Exception {
+        Person personToSave = personBuilder();
+        personToSave.setId(1L);
+        personRepository.saveAndFlush(personToSave);
+        Address address = addressBuilder();
+        addressRepository.saveAndFlush(address);
+        //address.setId(1L);
+        personToSave.setAddresses(List.of(address));
+        personRepository.saveAndFlush(personToSave);
+        address.setPerson(personToSave);
+        addressRepository.saveAndFlush(address);
+        AddressDTO addressDTO = addressDTOBuilder();
+
+        when(addressService.parseAddressDto(addressDTO)).thenReturn(address);
+        when(personRepository.findById(personToSave.getId())).thenReturn(Optional.of(personToSave));
+        when(personRepository.saveAndFlush(Mockito.any(Person.class))).thenReturn(personToSave);
+        when(addressRepository.saveAndFlush(Mockito.any(Address.class))).thenReturn(address);
+
+        personService.insertAddress(personToSave.getId(), addressDTO);
+
+        List<Address> personAddresses = addressService.getPersonAddressesById(1L);
+
+        assertThat(personAddresses).isNotNull();
+        assertThat(personAddresses).isNotEmpty();
+        assertThat(personAddresses.size()).isGreaterThan(1);
+        assertThat(personAddresses.size()).isGreaterThan(1);
+        assertThat(personAddresses.get(1).getZipCode()).isEqualTo(addressDTO.getZipCode());
+
+    }
+
+    @Test
+    public void mustEditAddressWithGivenId() throws Exception {
+        Person personToSave = personBuilder();
+        personToSave.setId(1L);
+        personRepository.saveAndFlush(personToSave);
+        Address address = addressBuilder();
+        address.setId(1L);
+        addressRepository.saveAndFlush(address);
+        personToSave.setAddresses(List.of(address));
+        personRepository.saveAndFlush(personToSave);
+        address.setPerson(personToSave);
+        addressRepository.saveAndFlush(address);
+        AddressEditDTO addressEditDTO = AddressEditDTO.builder().number(45).street("Rua").build();
+
+        when(personRepository.findById(1L)).thenReturn(Optional.of(personToSave));
+        when(addressRepository.findById(1L)).thenReturn(Optional.of(address));
+        when(addressRepository.save(address)).thenReturn(address);
+
+        personService.editAddress(1L, 1L, addressEditDTO);
+
+        Address address1 = addressRepository.findById(1L).get();
+
+        assertThat(address1.getStreet()).isEqualTo("Rua");
+
+    }
+
     public Person personBuilder() throws Exception {
         SimpleDateFormat formatter = new SimpleDateFormat("dd/MM/yyyy");
         return Person.builder().name("Marcos").birthDay(formatter.parse("14/02/2004")).build();
@@ -176,6 +250,16 @@ public class PersonServiceTest {
                 .zipCode("0545-255")
                 .city("Gottan City")
                 .isMain(true)
+                .build();
+    }
+
+    public AddressDTO addressDTOBuilder() throws Exception {
+        return AddressDTO.builder()
+                .street("Rua 12")
+                .number(654)
+                .zipCode("12345-788")
+                .city("Gottan Town")
+                .isMain(false)
                 .build();
     }
 }

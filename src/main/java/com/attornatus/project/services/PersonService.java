@@ -94,7 +94,7 @@ public class PersonService {
     public void insertAddress(Long personId, AddressDTO addressDTO) {
         Address address = addressService.parseAddressDto(addressDTO);
         Person person = findById(personId);
-        person.getAddresses().add(address);
+        person.addData(address);
         personRep.saveAndFlush(person);
         address.setPerson(person);
         addressRep.saveAndFlush(address);

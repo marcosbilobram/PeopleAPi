@@ -48,4 +48,8 @@ public class Person implements Serializable {
         this.name = name;
         this.birthDay = birthDay;
     }
+
+    public void addData(Address address) {
+        addresses.add(address);
+    }
 }
