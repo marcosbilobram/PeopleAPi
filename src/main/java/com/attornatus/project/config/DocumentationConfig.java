@@ -19,7 +19,7 @@ public class DocumentationConfig {
                         .version("v1")
                         .description("API de controle de pessoas")
                         .contact(new Contact().name("Marcos Bilobram").email("marcosbilobram@hotmail.com"))
-                        .contact(new Contact()).title("Linkedin").description("https://www.linkedin.com/in/marcosbilobram/")
+                        .contact(new Contact()).description("https://www.linkedin.com/in/marcosbilobram/")
                 );
     }
 
