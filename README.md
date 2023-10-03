@@ -52,7 +52,7 @@ git clone https://github.com/marcosbilobram/PeopleAPi.git
 Requisitos : 
 Postman: https://www.postman.com
 
-Ao ser realizado o clone ou download do projeto, caso deseje utilizar a ferramenta postman para os testes de métodos HTTP, abra o programa postman, entre ou crie uma workspace, clique no botão "import" localizado no canto superior esquerdo e insira o arquivo ".postman_collection" na drop box ou apenas recupere o mesmo da pasta clonada do projeto.
+Ao ser realizado o clone ou download do projeto, caso deseje utilizar a ferramenta postman para os testes de métodos HTTP, abra o programa postman, entre ou crie uma workspace, clique no botão "import" localizado no canto superior esquerdo e insira o arquivo "PeopleAPI.postman_collection" na drop box ou apenas recupere o mesmo da pasta clonada do projeto.
 
 # Detalhamento dos endpoints
 
